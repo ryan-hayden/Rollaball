@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
 
+    public static int WIN_COUNT = 12;
+
     public float speed = 0;
+    public TextMeshProUGUI countText;
+    public GameObject winText;
 
     private Rigidbody rb;
+    private int count;
     private float movementX;
     private float movementY;
 
@@ -16,6 +22,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        count = 0;
+        SetCountText();
+        winText.SetActive(false);
     }
 
     void OnMove(InputValue movementValue)
@@ -24,6 +33,15 @@ public class PlayerController : MonoBehaviour
 
         movementX = movementVector.x;
         movementY = movementVector.y;
+    }
+
+    void SetCountText()
+    {
+        countText.text = "Count: " + count;
+        if(count >= WIN_COUNT)
+        {
+            winText.SetActive(true);
+        }
     }
     
     // FixedUpdate is called before phsyics calculations
@@ -39,6 +57,8 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("PickUp"))
         {
             other.gameObject.SetActive(false);
+            count++;
+            SetCountText();
         }
     }
 }
